@@ -16,9 +16,12 @@ def generate_embeddings(frame_paths):
         inputs = processor(images=image, return_tensors="pt").to(device)
 
         with torch.no_grad():
-            emb = model.get_image_features(**inputs)
+            output = model.get_image_features(**inputs)
 
-        embeddings.append(emb.cpu().numpy()[0])
+        # 🔧 FIX: extract tensor properly
+        emb = output.detach().cpu().numpy()[0]
+
+        embeddings.append(emb)
 
     embeddings = np.array(embeddings)
 
