@@ -18,8 +18,8 @@ def generate_embeddings(frame_paths):
         with torch.no_grad():
             output = model.get_image_features(**inputs)
 
-        # 🔧 FIX: extract tensor properly
-        emb = output.detach().cpu().numpy()[0]
+        emb_tensor = output.pooler_output if hasattr(output, "pooler_output") else output
+        emb = emb_tensor.squeeze().cpu().numpy()
 
         embeddings.append(emb)
 
